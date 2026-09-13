@@ -288,6 +288,58 @@
             100% { transform: translateX(100vw); opacity: 0; }
         }
 
+        .size-error {
+            display: none;
+            margin-top: 20px;
+            padding: 16px 20px;
+            border-radius: 8px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c2c7;
+            color: #842029;
+            font-size: 0.95rem;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
+        }
+        .size-error.show {
+            display: flex;
+            animation: shakeError 0.4s ease-in-out;
+        }
+        .size-error i {
+            font-size: 1.6rem;
+            flex-shrink: 0;
+            color: #dc3545;
+        }
+        .size-error .error-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .size-error .error-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .size-error .error-text {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        html.dark .size-error {
+            background-color: #2c1618;
+            border-color: #5a1e22;
+            color: #f5b7bc;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.25);
+        }
+        html.dark .size-error i {
+            color: #ff6b6b;
+        }
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
         @media (max-width: 576px) {
             .faq-btn {
                 right: 64px;
@@ -384,6 +436,14 @@
                     <small class="text-muted d-block mt-1">The file will be automatically deleted after this time.</small>
                 </div>
             </form>
+
+            <div class="size-error" id="sizeError">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <div class="error-content">
+                    <div class="error-title">File is too large</div>
+                    <div class="error-text" id="sizeErrorText"></div>
+                </div>
+            </div>
         </div>
 
         {% include 'shared/_features.html' %}
@@ -410,11 +470,46 @@
 
         const form = document.getElementById('uploadForm');
         const fileInput = document.getElementById('fileInput');
+        const sizeError = document.getElementById('sizeError');
+        const sizeErrorText = document.getElementById('sizeErrorText');
+        const dropArea = document.getElementById('dropArea');
+
+        const MAX_SIZE = 99 * 1024 * 1024;
+
+        function formatSize(bytes) {
+            if (bytes >= 1024 * 1024 * 1024) return (bytes / 1024 / 1024 / 1024).toFixed(2) + ' GB';
+            if (bytes >= 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+            if (bytes >= 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return bytes + ' B';
+        }
+
+        function showSizeError(file) {
+            sizeErrorText.textContent = `Size of «${file.name}» is ${formatSize(file.size)}. Maximum size: ${MAX_SIZE / 1024 / 1024} MB.`;
+            sizeError.classList.remove('show');
+            void sizeError.offsetWidth;
+            sizeError.classList.add('show');
+            sizeError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function clearSizeError() {
+            sizeError.classList.remove('show');
+            sizeErrorText.textContent = '';
+        }
 
         function submitForm() {
-            if (fileInput.files.length > 0) {
-                form.submit();
+            if (fileInput.files.length === 0) return;
+
+            const file = fileInput.files[0];
+
+            if (file.size > MAX_SIZE) {
+                showSizeError(file);
+                fileInput.value = '';
+                document.querySelector('#dropArea h5').textContent = 'Drag & drop files here';
+                return;
             }
+
+            clearSizeError();
+            form.submit();
         }
 
         fileInput.addEventListener('change', function(e) {
@@ -424,7 +519,6 @@
             }
         });
 
-        const dropArea = document.getElementById('dropArea');
         dropArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropArea.style.borderColor = '#0d6efd';
