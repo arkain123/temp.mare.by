@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLASHYFILES - Temporary File Sharing</title>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme !== 'light') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/favicon-16x16.png">
+    <link rel="manifest" href="../static/site.webmanifest">
+    <style>
+        body {
+            background-color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0d6efd;
+            margin-bottom: 10px;
+        }
+        .logo-image {
+            max-height: 240px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        .tagline {
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        .upload-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #f8f9fa;
+        }
+        .upload-icon {
+            font-size: 3rem;
+            color: #0d6efd;
+            margin-bottom: 20px;
+        }
+        .file-input-area {
+            border: 2px dashed #ced4da;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .file-input-area:hover {
+            border-color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+        html.dark body {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        html.dark .upload-container {
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+        html.dark .file-input-area {
+            border-color: #444;
+            background-color: #2a2a2a;
+        }
+        html.dark .file-input-area:hover {
+            background-color: #333;
+            border-color: #0d6efd;
+        }
+        html.dark .tagline {
+            color: #aaa;
+        }
+        html.dark .btn-outline-primary {
+            color: #90caf9;
+            border-color: #90caf9;
+        }
+        html.dark .btn-outline-primary:hover {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+        html.dark .form-label {
+            color: #ccc;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.1);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            transition: 0.1s;
+            border: none;
+        }
+        html.dark .theme-toggle {
+            background: rgba(255,255,255,0.2);
+        }
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
+        .theme-toggle img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .faq-btn {
+            position: fixed;
+            top: 20px;
+            right: 76px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.1);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            transition: 0.1s;
+            border: none;
+            text-decoration: none;
+            color: #0b1a2e;
+            font-size: 1.6rem;
+        }
+        html.dark .faq-btn {
+            background: rgba(255,255,255,0.2);
+            color: #d0d8e0;
+        }
+        .faq-btn:hover {
+            transform: scale(1.05);
+            background: rgba(0,0,0,0.2);
+        }
+        html.dark .faq-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .info-bubble .badge {
+            background-color: rgba(0,0,0,0.05);
+            color: #555;
+            font-weight: normal;
+            backdrop-filter: blur(4px);
+        }
+        html.dark .info-bubble .badge {
+            background-color: rgba(255,255,255,0.1);
+            color: #ccc;
+        }
+        .info-bubble {
+            font-size: 0.85rem;
+        }
+        .text-muted {
+            --bs-text-opacity: 1;
+            color: rgba(150, 156, 162, 0.75) !important;
+        }
+        .badge-clickable {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.2s;
+        }
+        .badge-clickable:hover {
+            background-color: rgba(13,110,253,0.2) !important;
+        }
+        html.dark .badge-clickable:hover {
+            background-color: rgba(30,136,229,0.3) !important;
+        }
+        .badge-download {
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .badge-download:hover {
+            transform: scale(1.05);
+            background-color: rgba(13,110,253,0.2) !important;
+        }
+        html.dark .badge-download:hover {
+            background-color: rgba(30,136,229,0.3) !important;
+        }
+
+        .expire-options {
+            gap: 8px;
+        }
+        .expire-option {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 16px;
+            border: 2px solid #ced4da;
+            border-radius: 20px;
+            background: #fff;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            user-select: none;
+            flex: 0 1 auto;
+        }
+        .expire-option:hover {
+            border-color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+        .expire-option input[type="radio"] {
+            display: none;
+        }
+        .expire-option input[type="radio"]:checked + span {
+            color: #0d6efd;
+            font-weight: 600;
+        }
+        .expire-option:has(input:checked) {
+            border-color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+        html.dark .expire-option {
+            background-color: #2a2a2a;
+            border-color: #444;
+            color: #ccc;
+        }
+        html.dark .expire-option:hover {
+            border-color: #90caf9;
+            background-color: rgba(144, 202, 249, 0.1);
+        }
+        html.dark .expire-option input[type="radio"]:checked + span {
+            color: #90caf9;
+        }
+        html.dark .expire-option:has(input:checked) {
+            border-color: #90caf9;
+            background-color: rgba(144, 202, 249, 0.15);
+        }
+
+        .nav-btn {
+            position: fixed;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #0d6efd;
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+            transition: 0.2s;
+            text-decoration: none;
+        }
+        .nav-btn:hover {
+            transform: translateY(-50%) scale(1.08);
+            background: #0b5ed7;
+            box-shadow: 0 6px 20px rgba(13, 110, 253, 0.6);
+        }
+        html.dark .nav-btn {
+            background: #1a73e8;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.5);
+        }
+        html.dark .nav-btn:hover {
+            background: #1557b0;
+        }
+        .nav-btn i {
+            font-size: 2.2rem;
+        }
+
+        .slide-out-right {
+            animation: slideOutRight 0.6s ease-in forwards;
+        }
+        @keyframes slideOutRight {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(100vw); opacity: 0; }
+        }
+
+        @media (max-width: 576px) {
+            .faq-btn {
+                right: 64px;
+                width: 40px;
+                height: 40px;
+                top: 12px;
+                font-size: 1.3rem;
+            }
+            .nav-btn {
+                width: 44px;
+                height: 44px;
+                left: 12px;
+            }
+            .nav-btn i {
+                font-size: 1.8rem;
+            }
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                top: 12px;
+                right: 12px;
+            }
+            .theme-toggle img {
+                width: 26px;
+                height: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/faq" class="faq-btn" aria-label="FAQ">
+        <i class="bi bi-question-circle"></i>
+    </a>
+
+    <div class="theme-toggle" id="themeToggle">
+        <img id="themeIcon" src="" alt="Theme toggle">
+    </div>
+
+    <a href="#" id="navBtn" class="nav-btn" title="Go to mare.by" aria-label="Navigate to mare.by">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+
+    <div class="container py-5" id="mainContent">
+        <div class="logo-area text-center">
+            <div class="logo">FLASHYFILES</div>
+            <img id="logoImage" src="{{ url_for('static', filename='glorymare.png') }}" alt="FLASHYFILES Logo" class="logo-image">
+            <div class="tagline">Simple and fast file sharing</div>
+        </div>
+
+        <div class="upload-container">
+            <div class="text-center upload-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-cloud-arrow-up" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2z"/>
+                    <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+                </svg>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" id="uploadForm">
+                <div class="file-input-area" id="dropArea">
+                    <h5>Drag & drop files here</h5>
+                    <p class="text-muted">or</p>
+                    <input type="file" name="file" class="form-control d-none" id="fileInput">
+                    <label for="fileInput" class="btn btn-outline-primary">Select File</label>
+                </div>
+
+                <div class="text-center mb-3">
+                    <label class="form-label">File retention period:</label>
+                    <div class="expire-options d-flex flex-wrap justify-content-center gap-2">
+                        <label class="expire-option">
+                            <input type="radio" name="expire" value="1h">
+                            <span>1 hour</span>
+                        </label>
+                        <label class="expire-option">
+                            <input type="radio" name="expire" value="6h">
+                            <span>6 hours</span>
+                        </label>
+                        <label class="expire-option">
+                            <input type="radio" name="expire" value="12h">
+                            <span>12 hours</span>
+                        </label>
+                        <label class="expire-option">
+                            <input type="radio" name="expire" value="1d" checked>
+                            <span>1 day</span>
+                        </label>
+                        <label class="expire-option">
+                            <input type="radio" name="expire" value="3d">
+                            <span>3 days</span>
+                        </label>
+                        <label class="expire-option">
+                            <input type="radio" name="expire" value="7d">
+                            <span>7 days</span>
+                        </label>
+                    </div>
+                    <small class="text-muted d-block mt-1">The file will be automatically deleted after this time.</small>
+                </div>
+            </form>
+        </div>
+
+        {% include 'shared/_features.html' %}
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        function updateThemeUI() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const iconSrc = isDark ? "{{ url_for('static', filename='celestia.png') }}" : "{{ url_for('static', filename='luna.png') }}";
+            themeIcon.src = iconSrc;
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeUI();
+        });
+
+        updateThemeUI();
+
+        const form = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('fileInput');
+
+        function submitForm() {
+            if (fileInput.files.length > 0) {
+                form.submit();
+            }
+        }
+
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                document.querySelector('#dropArea h5').textContent = e.target.files[0].name;
+                submitForm();
+            }
+        });
+
+        const dropArea = document.getElementById('dropArea');
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.style.borderColor = '#0d6efd';
+            dropArea.style.backgroundColor = 'rgba(13, 110, 253, 0.1)';
+        });
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.style.borderColor = '#ced4da';
+            dropArea.style.backgroundColor = '';
+        });
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.style.borderColor = '#ced4da';
+            dropArea.style.backgroundColor = '';
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                document.querySelector('#dropArea h5').textContent = e.dataTransfer.files[0].name;
+                submitForm();
+            }
+        });
+
+        document.addEventListener('paste', function(e) {
+            const items = (e.clipboardData || window.clipboardData).items;
+            let file = null;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].kind === 'file') {
+                    file = items[i].getAsFile();
+                    break;
+                }
+            }
+            if (file) {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+                document.querySelector('#dropArea h5').textContent = file.name;
+                submitForm();
+            }
+        });
+
+        document.getElementById('navBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.body.classList.add('slide-out-right');
+            setTimeout(() => {
+                window.location.href = 'https://mare.by';
+            }, 600);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.remove('slide-out-right');
+        });
+        window.addEventListener('pageshow', function() {
+            document.body.classList.remove('slide-out-right');
+        });
+
+        const logo = document.getElementById('logoImage');
+        if (logo) {
+            logo.addEventListener('click', function() {
+                const sounds = [
+                    "{{ url_for('static', filename='mlp-squee1.mp3') }}",
+                    "{{ url_for('static', filename='mlp-squee2.mp3') }}"
+                ];
+                const randomIndex = Math.floor(Math.random() * sounds.length);
+                const audio = new Audio(sounds[randomIndex]);
+                audio.play().catch(e => console.warn('Audio play failed:', e));
+            });
+        }
+    </script>
+</body>
+</html>

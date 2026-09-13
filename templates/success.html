@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLASHYFILES - File Uploaded</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/favicon-16x16.png">
+    <link rel="manifest" href="../static/site.webmanifest">
+    <style>
+        body {
+            background-color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .logo-area {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0d6efd;
+            margin-bottom: 10px;
+            text-decoration: none;
+        }
+        .logo:hover {
+            color: #0b5ed7;
+        }
+        .logo-image {
+            max-height: 240px;
+            margin: 10px 0;
+        }
+        .tagline {
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        .result-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #f8f9fa;
+        }
+        .success-icon {
+            font-size: 3rem;
+            color: #198754;
+            margin-bottom: 20px;
+        }
+        .url-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+        .expire-info {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        .btn-copy, .btn-home {
+            padding: 10px 25px;
+            font-weight: 500;
+        }
+        .btn-home {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        /* Dark theme */
+        body.dark {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        body.dark .result-container {
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+        body.dark .url-box {
+            background-color: #2a2a2a;
+            border-color: #444;
+            color: #ddd;
+        }
+        body.dark .url-box a {
+            color: #90caf9;
+        }
+        body.dark .tagline {
+            color: #aaa;
+        }
+        body.dark .expire-info {
+            background-color: #2a2a2a;
+            border-color: #444;
+            color: #ccc;
+        }
+        body.dark .expire-info strong {
+            color: #90caf9;
+        }
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.1);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+        }
+        body.dark .theme-toggle {
+            background: rgba(255,255,255,0.2);
+        }
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
+        .theme-toggle img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .text-muted {
+            --bs-text-opacity: 1;
+            color: rgba(150, 156, 162, 0.75) !important;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme !== 'light') {
+                document.body.classList.add('dark');
+            }
+        })();
+    </script>
+    <div class="theme-toggle" id="themeToggle">
+        <img id="themeIcon" src="" alt="Theme toggle">
+    </div>
+    <div class="container py-5">
+        <div class="logo-area">
+            <div><a href="/" class="logo">FLASHYFILES</a></div>
+            <a href="/">
+                <img src="{{ url_for('static', filename='glorymare.png') }}" alt="FLASHYFILES Logo" class="logo-image">
+            </a>
+            <div class="tagline">Your file is ready to share</div>
+        </div>
+
+        <div class="result-container">
+            <div class="text-center success-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                </svg>
+            </div>
+
+            <h2 class="text-center mb-4">File uploaded successfully!</h2>
+
+            <div class="alert alert-success">
+                <strong>Your file URL:</strong>
+                <div class="url-box mt-2">
+                    <a href="{{ file_url }}" target="_blank">{{ file_url }}</a>
+                </div>
+            </div>
+
+            <div class="expire-info text-center">
+                <strong>⏳ This file will be automatically deleted after:</strong>
+                <span class="badge bg-primary ms-2">{{ expire }}</span>
+            </div>
+
+            <div class="d-flex justify-content-center gap-2">
+                <button onclick="copyLink()" class="btn btn-primary btn-copy">Copy URL</button>
+                <a href="/" class="btn btn-home">Upload Another</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        function updateThemeUI() {
+            const isDark = document.body.classList.contains('dark');
+            const iconSrc = isDark ? "{{ url_for('static', filename='celestia.png') }}" : "{{ url_for('static', filename='luna.png') }}";
+            themeIcon.src = iconSrc;
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeUI();
+        });
+        updateThemeUI();
+
+        function copyLink() {
+            navigator.clipboard.writeText("{{ file_url }}")
+                .then(() => {
+                    const btn = document.querySelector('.btn-copy');
+                    btn.textContent = 'Copied!';
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-success');
+                    setTimeout(() => {
+                        btn.textContent = 'Copy URL';
+                        btn.classList.remove('btn-success');
+                        btn.classList.add('btn-primary');
+                    }, 2000);
+                })
+                .catch(err => {
+                    alert("Failed to copy URL: " + err);
+                });
+        }
+    </script>
+</body>
+</html>
