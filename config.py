@@ -18,7 +18,7 @@ BANNED_EXTENSIONS = {
     'js', 'vbs', 'ps1', 'msi', 'dll',
 }
 
-MAX_FILE_SIZE = 1024 * 1024 * 1024  # 1024 MB
+MAX_FILE_SIZE = 100 * 1024 * 1024  # 100 MB
 
 # TTL
 EXPIRE_OPTIONS = {
