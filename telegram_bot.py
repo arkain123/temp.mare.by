@@ -71,7 +71,7 @@ def escape_markdown(text):
 
 def build_notification_markup(filename, user_ip, escalated):
     row = [
-        {"text": "Удалить файл", "callback_data": f"del:{filename}"},
+        {"text": "Remove file", "callback_data": f"del:{filename}"},
     ]
     if escalated:
         row.append({"text": "Deescalate", "callback_data": f"desc:{user_ip}"})
