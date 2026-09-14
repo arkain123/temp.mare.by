@@ -13,7 +13,7 @@ from config import (
 )
 from file_utils import delete_uploaded_file
 from ip_utils import append_ip_to_file, remove_ip_from_file
-
+from ip_lookup import format_ip_origin
 
 # ---------- Telegram API ----------
 def tg_api(method, data=None):
@@ -94,6 +94,9 @@ def send_telegram_notification(filename, original_filename, file_size, file_url,
         user_ip_esc = escape_markdown(user_ip)
         file_url_esc = escape_markdown(file_url)
 
+        ip_origin = format_ip_origin(user_ip)
+        origin_line = f"🔹 *IP origin:* `{ip_origin}`" if ip_origin else ""
+
         message = (
             f"📁 *New file uploaded*\n"
             f"🔹 *Site:* TEMP.MARE.BY\n"
@@ -102,6 +105,7 @@ def send_telegram_notification(filename, original_filename, file_size, file_url,
             f"🔹 *Original:* {original_filename_esc}\n"
             f"🔹 *Size:* {file_size / 1024:.2f} KB\n"
             f"🔹 *User IP:* `{user_ip_esc}`\n"
+            f"{origin_line}\n"
             f"🔹 *URL:* {file_url_esc}\n"
             f"⏳ *Expires:* {expire_readable}\n"
             f"🕒 *Time:* {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
