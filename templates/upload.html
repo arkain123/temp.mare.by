@@ -22,7 +22,29 @@
         body {
             background-color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
+
+        .upload-container,
+        .file-input-area,
+        .faq-btn,
+        .expire-option,
+        .size-error,
+        .btn-outline-primary {
+            transition: background-color 0.25s ease,
+                        color 0.25s ease,
+                        border-color 0.25s ease,
+                        box-shadow 0.25s ease;
+        }
+
+        .nav-btn {
+            transition: transform 0.2s, background-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .theme-toggle {
+            transition: 0.1s, background-color 0.25s ease;
+        }
+        
         .logo {
             font-size: 2.5rem;
             font-weight: 700;
@@ -51,6 +73,7 @@
             color: #0d6efd;
             margin-bottom: 20px;
         }
+
         .file-input-area {
             border: 2px dashed #ced4da;
             border-radius: 8px;
@@ -58,6 +81,10 @@
             text-align: center;
             margin-bottom: 20px;
             cursor: pointer;
+            background-color: #f8f9fa;
+            transition: background-color 0.25s ease,
+                        border-color 0.25s ease,
+                        color 0.25s ease;
         }
         .file-input-area:hover {
             border-color: #0d6efd;
@@ -143,14 +170,17 @@
             color: #0b1a2e;
             font-size: 1.6rem;
         }
+
         html.dark .faq-btn {
             background: rgba(255,255,255,0.2);
             color: #d0d8e0;
         }
+
         .faq-btn:hover {
             transform: scale(1.05);
             background: rgba(0,0,0,0.2);
         }
+
         html.dark .faq-btn:hover {
             background: rgba(255,255,255,0.3);
         }
@@ -160,37 +190,53 @@
             color: #555;
             font-weight: normal;
             backdrop-filter: blur(4px);
+            transition: background-color 0.25s ease,
+                        color 0.25s ease,
+                        border-color 0.25s ease;
         }
+
         html.dark .info-bubble .badge {
             background-color: rgba(255,255,255,0.1);
             color: #ccc;
         }
+
         .info-bubble {
             font-size: 0.85rem;
         }
+
         .text-muted {
             --bs-text-opacity: 1;
             color: rgba(150, 156, 162, 0.75) !important;
         }
+
         .badge-clickable {
             text-decoration: none;
             color: inherit;
-            transition: 0.2s;
+                transition: transform 0.2s ease,
+                background-color 0.25s ease,
+                color 0.25s ease;
         }
+
         .badge-clickable:hover {
             background-color: rgba(13,110,253,0.2) !important;
         }
+
         html.dark .badge-clickable:hover {
             background-color: rgba(30,136,229,0.3) !important;
         }
+
         .badge-download {
             text-decoration: none;
-            transition: 0.2s;
+            transition: transform 0.2s ease,
+                        background-color 0.25s ease,
+                        color 0.25s ease;
         }
+
         .badge-download:hover {
             transform: scale(1.05);
             background-color: rgba(13,110,253,0.2) !important;
         }
+
         html.dark .badge-download:hover {
             background-color: rgba(30,136,229,0.3) !important;
         }
@@ -198,6 +244,7 @@
         .expire-options {
             gap: 8px;
         }
+
         .expire-option {
             position: relative;
             cursor: pointer;
@@ -210,33 +257,41 @@
             user-select: none;
             flex: 0 1 auto;
         }
+
         .expire-option:hover {
             border-color: #0d6efd;
             background-color: rgba(13, 110, 253, 0.05);
         }
+
         .expire-option input[type="radio"] {
             display: none;
         }
+
         .expire-option input[type="radio"]:checked + span {
             color: #0d6efd;
             font-weight: 600;
         }
+
         .expire-option:has(input:checked) {
             border-color: #0d6efd;
             background-color: rgba(13, 110, 253, 0.1);
         }
+
         html.dark .expire-option {
             background-color: #2a2a2a;
             border-color: #444;
             color: #ccc;
         }
+
         html.dark .expire-option:hover {
             border-color: #90caf9;
             background-color: rgba(144, 202, 249, 0.1);
         }
+
         html.dark .expire-option input[type="radio"]:checked + span {
             color: #90caf9;
         }
+
         html.dark .expire-option:has(input:checked) {
             border-color: #90caf9;
             background-color: rgba(144, 202, 249, 0.15);
@@ -264,18 +319,22 @@
             transition: 0.2s;
             text-decoration: none;
         }
+
         .nav-btn:hover {
             transform: translateY(-50%) scale(1.08);
             background: #0b5ed7;
             box-shadow: 0 6px 20px rgba(13, 110, 253, 0.6);
         }
+
         html.dark .nav-btn {
             background: #1a73e8;
             box-shadow: 0 4px 12px rgba(26, 115, 232, 0.5);
         }
+
         html.dark .nav-btn:hover {
             background: #1557b0;
         }
+
         .nav-btn i {
             font-size: 2.2rem;
         }
@@ -283,9 +342,19 @@
         .slide-out-right {
             animation: slideOutRight 0.6s ease-in forwards;
         }
+
         @keyframes slideOutRight {
-            0% { transform: translateX(0); opacity: 1; }
+            0%   { transform: translateX(0);     opacity: 1; }
             100% { transform: translateX(100vw); opacity: 0; }
+        }
+
+        .nav-btn.slide-out-right {
+            animation: slideOutRightNav 0.6s ease-in forwards;
+        }
+
+        @keyframes slideOutRightNav {
+            0%   { transform: translateY(-50%) translateX(0);     opacity: 1; }
+            100% { transform: translateY(-50%) translateX(100vw); opacity: 0; }
         }
 
         .size-error {
@@ -301,37 +370,45 @@
             gap: 12px;
             box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
         }
+
         .size-error.show {
             display: flex;
             animation: shakeError 0.4s ease-in-out;
         }
+
         .size-error i {
             font-size: 1.6rem;
             flex-shrink: 0;
             color: #dc3545;
         }
+
         .size-error .error-content {
             display: flex;
             flex-direction: column;
             gap: 2px;
         }
+
         .size-error .error-title {
             font-weight: 600;
             font-size: 1rem;
         }
+
         .size-error .error-text {
             font-size: 0.9rem;
             opacity: 0.9;
         }
+
         html.dark .size-error {
             background-color: #2c1618;
             border-color: #5a1e22;
             color: #f5b7bc;
             box-shadow: 0 2px 8px rgba(220, 53, 69, 0.25);
         }
+
         html.dark .size-error i {
             color: #ff6b6b;
         }
+
         @keyframes shakeError {
             0%, 100% { transform: translateX(0); }
             20% { transform: translateX(-8px); }
@@ -559,18 +636,31 @@
 
         document.getElementById('navBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            document.body.classList.add('slide-out-right');
+
+            const elementsToSlide = [
+                document.getElementById('mainContent'),
+                document.querySelector('.faq-btn'),
+                document.getElementById('themeToggle'),
+                document.getElementById('navBtn')
+            ];
+
+            elementsToSlide.forEach(el => {
+                if (el) el.classList.add('slide-out-right');
+            });
+
             setTimeout(() => {
                 window.location.href = 'https://mare.by';
             }, 600);
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.classList.remove('slide-out-right');
-        });
-        window.addEventListener('pageshow', function() {
-            document.body.classList.remove('slide-out-right');
-        });
+        function resetSlide() {
+            document.querySelectorAll('.slide-out-right').forEach(el => {
+                el.classList.remove('slide-out-right');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', resetSlide);
+        window.addEventListener('pageshow', resetSlide);
 
         const logo = document.getElementById('logoImage');
         if (logo) {
