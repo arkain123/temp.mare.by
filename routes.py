@@ -167,9 +167,13 @@ def api_upload():
         return "No selected file", 400
 
     file = files[0]
-    expire_str = request.form.get('expire', DEFAULT_EXPIRE)
+    expire_str = (
+        request.args.get('expire')
+        or request.form.get('expire')
+        or DEFAULT_EXPIRE
+    )
     if expire_str not in EXPIRE_OPTIONS:
-        expire_str = request.args.get('expire', DEFAULT_EXPIRE)
+        expire_str = DEFAULT_EXPIRE
 
     result = process_upload(file, expire_str, source='api')
     if not isinstance(result, tuple) or len(result) != 3:
